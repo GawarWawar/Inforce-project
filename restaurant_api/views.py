@@ -26,18 +26,23 @@ def restourants(request):
 @api_view(["GET", "PUT"])      
 def restourants_by_id(request, restourant_id):
         if request.method == "GET": 
-            particular_restourant = models.Restourant.objects.get(pk = restourant_id)
+            particular_restourant = get_object_or_404(models.Restourant, pk = restourant_id)
             particular_restourant = serializers.RestourantSerializer(particular_restourant)
             return Response({"restourant": particular_restourant.data})
         
         if request.method == "PUT":
             particular_restourant = get_object_or_404(models.Restourant, pk = restourant_id)
-            for field in request.data:
-                models.Restourant.objects.filter(pk=restourant_id).update(**{field: request.data[field]})
             
+            changed = False
+            for field in request.data:
+                if particular_restourant.__dict__[field] != request.data[field]:
+                    particular_restourant.__dict__[field] = request.data[field]
+                    changed = True
+            particular_restourant.save()
+
             particular_restourant = serializers.RestourantSerializer(
                 models.Restourant.objects.get(pk = restourant_id)
             )
 
-            return Response({"restourant": particular_restourant.data, "change": True})
+            return Response({"restourant": particular_restourant.data, "changed": changed})
 
