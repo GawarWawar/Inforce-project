@@ -24,7 +24,7 @@ def signup(request):
         generated_tokens = tokens.create_jwt_pair_for_user(user)
         data = serializer.data
         data.pop("password")
-        return Response({"token": generated_tokens, "user": data})
+        return Response({"tokens": generated_tokens, "user": data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
