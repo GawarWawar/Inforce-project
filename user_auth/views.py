@@ -2,12 +2,14 @@ from django.contrib.auth.models import User
 
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .serializers import UserSerializer
 
+from .serializers import UserSerializer
+from . import tokens
 
 @api_view(['POST'])
 def signup(request):
@@ -19,9 +21,10 @@ def signup(request):
         user.set_password(request.data["password"])
         user.save()
         
-        token = Token.objects.create(user=user)
-        token.save()
-        return Response({"token": token.key, "user": serializer.data})
+        generated_tokens = tokens.create_jwt_pair_for_user(user)
+        data = serializer.data
+        data.pop("password")
+        return Response({"token": generated_tokens, "user": data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
@@ -33,12 +36,14 @@ def login(request):
 
     if not user.check_password(request.data["password"]):
         return Response({"detail": "Not found."}, status=status.HTTP_400_BAD_REQUEST) 
-    token, _ = Token.objects.get_or_create(user=user)
+    generated_tokens = tokens.create_jwt_pair_for_user(user)
     serializer = UserSerializer(user)
-    return Response({"token": token.key, "user": serializer.data})
+    data = serializer.data
+    data.pop("password")
+    return Response({"tokens": generated_tokens, "user": data})
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
+@authentication_classes([SessionAuthentication, JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def check_token(request):
     serializer = UserSerializer(request.user)
