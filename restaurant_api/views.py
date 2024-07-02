@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponseNotAllowed
 
 
 from . import serializers, models
@@ -27,20 +27,23 @@ def restaurants(request: HttpRequest):
 @api_view(["GET", "PUT"])      
 def restaurants_by_id(request: HttpRequest, restaurant_id):
         if request.method == "GET": 
-            # particular_restaurant = dm_restaurants.get_restaurant_by_id(restaurant_id)
-            # if particular_restaurant['errors']:
-            #     response_status = particular_restaurant.pop("status")
-            #     return Response(particular_restaurant, status=response_status)
-            # TODO: add menu by id here and votes by id for every menu
+            particular_restaurant = dm_restaurants.get_restaurant_by_id(restaurant_id)
+            if 'errors' in particular_restaurant:
+                response_status = particular_restaurant.pop("status")
+                return Response(particular_restaurant, status=response_status)
+            else:
+                particular_restaurant = particular_restaurant["restaurant"]
+            restaurant_menus = dm_menus.filter_menus("restaurant", restaurant_id)["menus"]
             
+            for menu in restaurant_menus:
+                menu["votes"] = dm_votes.filter_votes("menu", menu["id"])["votes"]   
             
-            
-            particular_restaurant = get_object_or_404(models.Restaurant, pk = restaurant_id)
-            restaurant_menus = models.Menu.objects.filter(restaurant = particular_restaurant)
-            
-            particular_restaurant = serializers.RestaurantSerializer(particular_restaurant)
-            restaurant_menus = serializers.MenuSerializer(restaurant_menus, many = True)
-            return Response({"restaurant": particular_restaurant.data, "menus": restaurant_menus.data})
+            return Response(
+                {
+                    "restaurant": particular_restaurant, 
+                    "menus": restaurant_menus
+                }
+            )
         
         if request.method == "PUT":
             response = dm_restaurants.update_restaurant_by_id(request.data, restaurant_id)
@@ -53,21 +56,10 @@ def restaurants_by_id(request: HttpRequest, restaurant_id):
 @api_view(["GET", "POST"])
 def all_menus (request: HttpRequest, restaurant_id = None):
     if request.method == "GET": 
-        if restaurant_id:
-            particular_restaurant = get_object_or_404(models.Restaurant, pk = restaurant_id)
-            restaurant_menus = models.Menu.objects.filter(restaurant = particular_restaurant)
-            
-            particular_restaurant = serializers.RestaurantSerializer(particular_restaurant)
-            restaurant_menus = serializers.MenuSerializer(restaurant_menus, many = True)
-            return Response({"restaurant": particular_restaurant.data, "menus": restaurant_menus.data})
-        
         return Response(dm_menus.get_all_menus())
     
-    elif request.method == "POST":
-        if restaurant_id:
-            request.data["restaurant"] = restaurant_id
-            
-        response = dm_restaurants.post_new_restaurant(request.data)
+    elif request.method == "POST":            
+        response = dm_menus.post_new_menu(request.data)
         if "error" in response:
             response_status = response.pop("status")
             return Response(response, status=response_status)
@@ -76,33 +68,26 @@ def all_menus (request: HttpRequest, restaurant_id = None):
         
         
 @api_view(["GET", "PUT"])      
-def menus_by_id(request: HttpRequest, menu_id, restaurant_id = None):
+def menus_by_id(request: HttpRequest, menu_id):
         if request.method == "GET": 
-            if restaurant_id:
-                tmp = menu_id
-                menu_id = restaurant_id
-                restaurant_id = tmp
-
-            particular_menu = get_object_or_404(models.Menu, pk = menu_id)
-            particular_menu = serializers.MenuSerializer(particular_menu)
-
-            if restaurant_id:
-                particular_restaurant = get_object_or_404(models.Restaurant, pk = restaurant_id)
-                
-                particular_restaurant = serializers.RestaurantSerializer(particular_restaurant)
-                return Response({"restaurant": particular_restaurant.data, "menu": particular_menu.data})
-        
-            return Response({"menu": particular_menu.data})
+            particular_menu = dm_menus.get_menu_by_id(menu_id)
+            if 'errors' in particular_menu:
+                response_status = particular_menu.pop("status")
+                return Response(particular_menu, status=response_status)
+            else:
+                particular_menu = particular_menu.pop("menu")
+            
+            menu_votes = dm_votes.filter_votes("menu", particular_menu["id"])["votes"]   
+            
+            return Response(
+                {
+                    "menu": particular_menu,
+                    "votes": menu_votes
+                }
+            )
             
         if request.method == "PUT":
-            if restaurant_id:
-                tmp = menu_id
-                menu_id = restaurant_id
-                restaurant_id = tmp
-                particular_restaurant = get_object_or_404(models.Restaurant, pk = restaurant_id)
-                
-            if request.method == "PUT":
-                response = dm_menus.update_menu_by_id(request.data, menu_id)
+            response = dm_menus.update_menu_by_id(request.data, menu_id)
             if "error" in response:
                 response_status = response.pop("status")
                 return Response(response, status=response_status)
