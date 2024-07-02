@@ -10,7 +10,7 @@ def get_all_votes():
         models.Vote,
         serializers.VoteSerializer
     )
-    return {"menus": all_votes.data}
+    return {"votess": all_votes.data}
 
 def get_vote_by_id(vote_id):
     return tools.get_object_by_id(vote_id, "vote",models.Vote, serializers.VoteSerializer)
@@ -25,7 +25,7 @@ def post_vote(request_data):
     if new_vote.is_valid():
         new_vote.save()
         
-        return {"menu": new_vote.data}
+        return {"vote": new_vote.data}
     else:
         return {"errors": new_vote.errors, "status": status.HTTP_400_BAD_REQUEST}
     
