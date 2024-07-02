@@ -27,8 +27,11 @@ def restaurants(request):
 def restaurants_by_id(request, restaurant_id):
         if request.method == "GET": 
             particular_restaurant = get_object_or_404(models.Restaurant, pk = restaurant_id)
+            restaurant_menus = models.Menu.objects.filter(restaurant = particular_restaurant)
+            
             particular_restaurant = serializers.RestaurantSerializer(particular_restaurant)
-            return Response({"restaurant": particular_restaurant.data})
+            restaurant_menus = serializers.MenuSerializer(restaurant_menus, many = True)
+            return Response({"restaurant": particular_restaurant.data, "menus": restaurant_menus.data})
         
         if request.method == "PUT":
             particular_restaurant = get_object_or_404(models.Restaurant, pk = restaurant_id)
