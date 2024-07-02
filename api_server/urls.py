@@ -27,5 +27,8 @@ urlpatterns = [
     path("api/restaurants/", restaurants_views.restaurants),
     path("api/restaurants/<restaurant_id>", restaurants_views.restaurants_by_id),
     
+    path("api/menus/", restaurants_views.menus),
+    path("api/menus/<menu_id>", restaurants_views.menus_by_id),
+    
     path("api/auth/", include("user_auth.urls")),
 ]
