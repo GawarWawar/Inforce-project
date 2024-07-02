@@ -16,6 +16,8 @@ class Menu(models.Model):
     restaurant  = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     day_created = models.DateField("Day of creation", default=datetime.date.today)
     description = models.CharField("Description", max_length=1000, default=0)
+    class Meta:
+        unique_together = ["restaurant", "day_created"]
 
 class Vote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -23,4 +25,4 @@ class Vote(models.Model):
     day_of_vote = models.DateField("Day of vote", default=datetime.date.today)
     
     class Meta:
-        unique_together = ['user', 'menu', "day_of_vote"]
+        unique_together = ["user", "menu", "day_of_vote"]
