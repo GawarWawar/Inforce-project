@@ -5,8 +5,6 @@ from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-
-
 from .serializers import UserSerializer
 
 
@@ -27,4 +25,13 @@ def signup(request):
 
 @api_view(['POST'])
 def login(request):
-    return Response({})
+    try:
+        user = User.objects.get(username = request.data["username"])
+    except user.DoesNotExist:
+        return Response({"detail": "Not found."}, status=status.HTTP_400_BAD_REQUEST) 
+
+    if not user.check_password(request.data["password"]):
+        return Response({"detail": "Not found."}, status=status.HTTP_400_BAD_REQUEST) 
+    token, _ = Token.objects.get_or_create(user=user)
+    serializer = UserSerializer(user)
+    return Response({"token": token.key, "user": serializer.data})
