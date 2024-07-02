@@ -1,3 +1,4 @@
+import datetime
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import HttpRequest
@@ -107,6 +108,11 @@ def all_menus (request: HttpRequest):
             return Response(response, status=response_status)
         else:
             return Response(response)
+        
+@api_view(["GET"])
+def menus_current_day (request: HttpRequest):
+    if request.method == "GET": 
+        return Response(dm_menus.filter_menus("day_created", datetime.date.today()))
         
         
 @api_view(["GET", "PUT"])      

@@ -1,10 +1,10 @@
+import datetime
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 
 from user_auth.models import Employee
 
-import datetime
 # Create your models here.
 
 class Restaurant(models.Model):

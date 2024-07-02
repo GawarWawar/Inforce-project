@@ -36,9 +36,11 @@ urlpatterns = [
     
     # GET last menu for the particular restaurant or POST to create new menu for the restaurant
     path("api/restaurants/<restaurant_id>/menu", restaurants_views.restaurants_by_id_last_menu),
+    # GET menus for the current day
+    path("api/today_menus", restaurants_views.menus_current_day), 
     
     # GET all menus or POST to create new menu
-    path("api/menus", restaurants_views.all_menus), #only last day
+    path("api/menus", restaurants_views.all_menus),
     # GET menu by id or PUT to update it
     path("api/menus/<menu_id>", restaurants_views.menus_by_id),
     # GET all menus where filter_field=filter_value
