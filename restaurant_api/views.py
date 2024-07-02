@@ -60,16 +60,26 @@ def restaurants_by_id(request: HttpRequest, restaurant_id):
             return Response({"restaurant": particular_restaurant.data, "changed": changed})
 
 @api_view(["GET", "POST"])
-def menus (request: HttpRequest):
+def menus (request: HttpRequest, restaurant_id = None):
     if request.method == "GET": 
+        if restaurant_id:
+            particular_restaurant = get_object_or_404(models.Restaurant, pk = restaurant_id)
+            restaurant_menus = models.Menu.objects.filter(restaurant = particular_restaurant)
+            
+            particular_restaurant = serializers.RestaurantSerializer(particular_restaurant)
+            restaurant_menus = serializers.MenuSerializer(restaurant_menus, many = True)
+            return Response({"restaurant": particular_restaurant.data, "menus": restaurant_menus.data})
+        
         all_menus = serialize_all_model_objects(
             models.Menu,
             serializers.MenuSerializer
         )
-        return Response({"menu": all_menus.data})
+        return Response({"menus": all_menus.data})
     
     elif request.method == "POST":
-        new_menu = serializers.RestaurantSerializer(data = request.data)
+        if restaurant_id:
+            request.data["restaurant"] = restaurant_id
+        new_menu = serializers.MenuSerializer(data = request.data)
         if new_menu.is_valid():
             new_menu.save()
             
@@ -78,14 +88,31 @@ def menus (request: HttpRequest):
             return Response(new_menu.errors, status=status.HTTP_400_BAD_REQUEST)
         
 @api_view(["GET", "PUT"])      
-def menus_by_id(request: HttpRequest, menu_id):
+def menus_by_id(request: HttpRequest, menu_id, restaurant_id = None):
         if request.method == "GET": 
-            particular_menu = models.Menu.objects.filter(pk = menu_id)
-            
-            particular_menu = serializers.MenuSerializer(particular_menu, many = True)
-            return Response({"menu": particular_menu.data})
+            if restaurant_id:
+                tmp = menu_id
+                menu_id = restaurant_id
+                restaurant_id = tmp
+
+            particular_menu = get_object_or_404(models.Menu, pk = menu_id)
+            particular_menu = serializers.MenuSerializer(particular_menu)
+
+            if restaurant_id:
+                particular_restaurant = get_object_or_404(models.Restaurant, pk = restaurant_id)
+                
+                particular_restaurant = serializers.RestaurantSerializer(particular_restaurant)
+                return Response({"restaurant": particular_restaurant.data, "menu": particular_menu.data})
         
+            return Response({"menu": particular_menu.data})
+            
         if request.method == "PUT":
+            if restaurant_id:
+                tmp = menu_id
+                menu_id = restaurant_id
+                restaurant_id = tmp
+                particular_restaurant = get_object_or_404(models.Restaurant, pk = restaurant_id)
+                
             particular_menu = get_object_or_404(models.Restaurant, pk = menu_id)
             
             changed = False
@@ -95,8 +122,10 @@ def menus_by_id(request: HttpRequest, menu_id):
                     changed = True
             particular_menu.save()
 
-            particular_menu = serializers.RestaurantSerializer(
-                models.Restaurant.objects.get(pk = menu_id)
-            )
+
+            if restaurant_id:
+                particular_restaurant = serializers.RestaurantSerializer(particular_restaurant)
+                particular_menu = serializers.MenuSerializer(particular_menu)
+                return Response({"restaurant": particular_restaurant.data, "menu": particular_menu.data, "changed": changed})
 
             return Response({"menu": particular_menu.data, "changed": changed})
