@@ -25,13 +25,7 @@ def post_new_restaurant(request_data):
         return {"errors": new_resourant.errors, "status": status.HTTP_400_BAD_REQUEST}
     
 def get_restaurant_by_id(restaurant_id):
-    try: 
-        particular_restaurant = get_object_or_404(models.Restaurant, pk = restaurant_id)
-    except Http404 as error:
-        return {"errors": error, "status": status.HTTP_404_NOT_FOUND}
-    else:
-        particular_restaurant = serializers.RestaurantSerializer(particular_restaurant)
-        return {"restaurant": particular_restaurant.data}
+    return tools.get_object_by_id(restaurant_id, models.Restaurant, serializers.RestaurantSerializer)
     
 def update_restaurant_by_id(request_data, restaurant_id):
     response = tools.update_object(request_data, restaurant_id, models.Restaurant, serializers.RestaurantSerializer)

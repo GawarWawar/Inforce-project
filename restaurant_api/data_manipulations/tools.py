@@ -31,3 +31,11 @@ def update_object(data_to_update, object_id, object_model, object_serializer):
         object_model.objects.get(pk = object_id)
     )
     return {"object": object_to_change.data, "changed": changed}
+
+def get_object_by_id (object_id, model, serializer):           
+    try:
+        particular_object = get_object_or_404(model, pk = object_id)
+    except Http404 as error:
+        return {"errors": error, "status": status.HTTP_404_NOT_FOUND}
+    particular_object = serializer(particular_object)
+    return {"menu": particular_object.data}

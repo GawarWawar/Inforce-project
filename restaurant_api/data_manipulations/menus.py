@@ -25,12 +25,7 @@ def post_new_menu(request_data):
         return {"errors": new_menu.errors, "status": status.HTTP_400_BAD_REQUEST}
 
 def get_menu_by_id(menu_id):
-        try:
-            particular_menu = get_object_or_404(models.Menu, pk = menu_id)
-        except Http404 as error:
-            return {"errors": error, "status": status.HTTP_404_NOT_FOUND}
-        particular_menu = serializers.MenuSerializer(particular_menu)
-        return {"menu": particular_menu.data}
+        return tools.get_object_by_id(menu_id, models.Menu, serializers.MenuSerializer)
     
 def update_menu_by_id(request_data, menu_id):
     response = tools.update_object(request_data, menu_id, models.Menu, serializers.MenuSerializer)
