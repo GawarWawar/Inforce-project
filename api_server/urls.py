@@ -25,7 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     path("api/restaurants/", restaurants_views.restaurants),
-    path("api/restaurants/<restaurants_id>", restaurants_views.restaurants_by_id),
+    path("api/restaurants/<restaurant_id>", restaurants_views.restaurants_by_id),
     
     path("api/auth/", include("user_auth.urls")),
 ]
