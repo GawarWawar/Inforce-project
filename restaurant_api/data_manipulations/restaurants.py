@@ -27,3 +27,11 @@ def update_restaurant_by_id(request_data, restaurant_id):
     return tools.update_object(
         request_data, restaurant_id, "restaurant", models.Restaurant, serializers.RestaurantSerializer
     )
+    
+def filter_restaurants(filter_field, filter_value):
+    filtered_data = tools.serialize_filtered_model_objects(
+        {filter_field: filter_value},
+        models.Restaurant,
+        serializers.RestaurantSerializer
+    ).data
+    return {"restaurant": filtered_data}
