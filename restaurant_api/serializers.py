@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
-from .models import Restourant, Menu, Vote
+from .models import Restaurant, Menu, Vote
 
-class RestourantSerializer(serializers.ModelSerializer):
+class RestaurantSerializer(serializers.ModelSerializer):
     class Meta(object):
-        model = Restourant
+        model = Restaurant
         fields = "__all__"
 
         

@@ -18,14 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 
 from . import views
-from restaurant_api import views as restourant_views
+from restaurant_api import views as restaurants_views
 
 urlpatterns = [
     path("", views.index),
     path('admin/', admin.site.urls),
     
-    path("api/restourants/", restourant_views.restourants),
-    path("api/restourants/<restourant_id>", restourant_views.restourants_by_id),
+    path("api/restaurants/", restaurants_views.restaurants),
+    path("api/restaurants/<restaurants_id>", restaurants_views.restaurants_by_id),
     
     path("api/auth/", include("user_auth.urls")),
 ]

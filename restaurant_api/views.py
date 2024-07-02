@@ -7,42 +7,42 @@ from rest_framework import status
 from . import serializers, models
 
 @api_view(["GET", "POST"])
-def restourants(request):
+def restaurants(request):
     if request.method == "GET": 
-        all_restourants = models.Restourant.objects.all()
-        all_restourants = serializers.RestourantSerializer(all_restourants, many = True)
-        return Response({"restourants": all_restourants.data})
+        all_restaurants = models.Restaurant.objects.all()
+        all_restaurants = serializers.RestaurantSerializer(all_restaurants, many = True)
+        return Response({"restaurants": all_restaurants.data})
     
     elif request.method == "POST":
-        new_resourant = serializers.RestourantSerializer(data = request.data)
+        new_resourant = serializers.RestaurantSerializer(data = request.data)
         if new_resourant.is_valid():
             new_resourant.save()
-            restourant = models.Restourant.objects.get(name = request.data["name"])
+            restaurant = models.Restaurant.objects.get(name = request.data["name"])
             
-            return Response({"restourant": new_resourant.data})
+            return Response({"restaurant": new_resourant.data})
         else:
             return Response(new_resourant.errors, status=status.HTTP_400_BAD_REQUEST)
   
 @api_view(["GET", "PUT"])      
-def restourants_by_id(request, restourant_id):
+def restaurants_by_id(request, restaurant_id):
         if request.method == "GET": 
-            particular_restourant = get_object_or_404(models.Restourant, pk = restourant_id)
-            particular_restourant = serializers.RestourantSerializer(particular_restourant)
-            return Response({"restourant": particular_restourant.data})
+            particular_restaurant = get_object_or_404(models.Restaurant, pk = restaurant_id)
+            particular_restaurant = serializers.RestaurantSerializer(particular_restaurant)
+            return Response({"restaurant": particular_restaurant.data})
         
         if request.method == "PUT":
-            particular_restourant = get_object_or_404(models.Restourant, pk = restourant_id)
+            particular_restaurant = get_object_or_404(models.Restaurant, pk = restaurant_id)
             
             changed = False
             for field in request.data:
-                if particular_restourant.__dict__[field] != request.data[field]:
-                    particular_restourant.__dict__[field] = request.data[field]
+                if particular_restaurant.__dict__[field] != request.data[field]:
+                    particular_restaurant.__dict__[field] = request.data[field]
                     changed = True
-            particular_restourant.save()
+            particular_restaurant.save()
 
-            particular_restourant = serializers.RestourantSerializer(
-                models.Restourant.objects.get(pk = restourant_id)
+            particular_restaurant = serializers.RestaurantSerializer(
+                models.Restaurant.objects.get(pk = restaurant_id)
             )
 
-            return Response({"restourant": particular_restourant.data, "changed": changed})
+            return Response({"restaurant": particular_restaurant.data, "changed": changed})
 
