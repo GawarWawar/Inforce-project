@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    
+    "restaurant_api.apps.RestaurantApiConfig",
+    "user_auth.apps.UserAuthConfig",
 ]
 
 REST_FRAMEWORK = {
