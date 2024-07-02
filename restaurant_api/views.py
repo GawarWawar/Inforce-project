@@ -136,3 +136,20 @@ def menus_filter_by_field_and_value(request, filter_field, filter_value):
         menus_after_filter = models.Menu.objects.filter(**{filter_field: filter_value}) 
         menus_after_filter = serializers.MenuSerializer(menus_after_filter, many = True)
         return Response({"menus": menus_after_filter.data})
+    
+@api_view(["GET", "POST"])
+def votes(request):
+    if request.method == "GET": 
+        all_votes = serialize_all_model_objects(
+            models.Vote,
+            serializers.VoteSerializer
+        )
+        return Response({"votes": all_votes.data})
+    elif request.method == "POST":
+        new_vote = serializers.VoteSerializer(data = request.data)
+        if new_vote.is_valid():
+            new_vote.save()
+            
+            return Response({"vote": new_vote.data})
+        else:
+            return Response(new_vote.errors, status=status.HTTP_400_BAD_REQUEST)
