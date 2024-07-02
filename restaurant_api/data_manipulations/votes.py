@@ -12,6 +12,14 @@ def get_all_votes():
     )
     return {"menus": all_votes.data}
 
+def get_vote_by_id(vote_id):
+    return tools.get_object_by_id(vote_id, "vote",models.Vote, serializers.VoteSerializer)
+
+def update_vote_by_id(request_data, vote_id):
+    return tools.update_object(
+        request_data, vote_id, "vote", models.Vote, serializers.VoteSerializer
+    )
+
 def post_vote(request_data):
     new_vote = serializers.VoteSerializer(data = request_data)
     if new_vote.is_valid():
