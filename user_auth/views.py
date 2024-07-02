@@ -15,9 +15,13 @@ def signup(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
+        
         user = User.objects.get(username=request.data["username"])
         user.set_password(request.data["password"])
+        user.save()
+        
         token = Token.objects.create(user=user)
+        token.save()
         return Response({"token": token.key, "user": serializer.data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
