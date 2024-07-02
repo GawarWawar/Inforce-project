@@ -23,6 +23,9 @@ from restaurant_api import views as restourant_views
 urlpatterns = [
     path("", views.index),
     path('admin/', admin.site.urls),
+    
     path("api/restourants/", restourant_views.restourants),
+    path("api/restourants/<restourant_id>", restourant_views.restourants_by_id),
+    
     path("api/auth/", include("user_auth.urls")),
 ]

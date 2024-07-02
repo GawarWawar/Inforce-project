@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -22,4 +22,22 @@ def restourants(request):
             return Response({"restourant": new_resourant.data})
         else:
             return Response(new_resourant.errors, status=status.HTTP_400_BAD_REQUEST)
+  
+@api_view(["GET", "PUT"])      
+def restourants_by_id(request, restourant_id):
+        if request.method == "GET": 
+            particular_restourant = models.Restourant.objects.get(pk = restourant_id)
+            particular_restourant = serializers.RestourantSerializer(particular_restourant)
+            return Response({"restourant": particular_restourant.data})
         
+        if request.method == "PUT":
+            particular_restourant = get_object_or_404(models.Restourant, pk = restourant_id)
+            for field in request.data:
+                models.Restourant.objects.filter(pk=restourant_id).update(**{field: request.data[field]})
+            
+            particular_restourant = serializers.RestourantSerializer(
+                models.Restourant.objects.get(pk = restourant_id)
+            )
+
+            return Response({"restourant": particular_restourant.data, "change": True})
+
