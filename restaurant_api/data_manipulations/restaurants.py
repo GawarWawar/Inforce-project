@@ -25,12 +25,9 @@ def post_new_restaurant(request_data):
         return {"errors": new_resourant.errors, "status": status.HTTP_400_BAD_REQUEST}
     
 def get_restaurant_by_id(restaurant_id):
-    return tools.get_object_by_id(restaurant_id, models.Restaurant, serializers.RestaurantSerializer)
+    return tools.get_object_by_id(restaurant_id, "restaurant", models.Restaurant, serializers.RestaurantSerializer)
     
 def update_restaurant_by_id(request_data, restaurant_id):
-    response = tools.update_object(request_data, restaurant_id, models.Restaurant, serializers.RestaurantSerializer)
-    if "error" in response:
-        return response
-    else:
-        response["restaurant"] = response.pop("object")
-        return response
+    return tools.update_object(
+        request_data, restaurant_id, "restaurant", models.Restaurant, serializers.RestaurantSerializer
+    )

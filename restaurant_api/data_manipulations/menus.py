@@ -25,15 +25,12 @@ def post_new_menu(request_data):
         return {"errors": new_menu.errors, "status": status.HTTP_400_BAD_REQUEST}
 
 def get_menu_by_id(menu_id):
-        return tools.get_object_by_id(menu_id, models.Menu, serializers.MenuSerializer)
+    return tools.get_object_by_id(menu_id, "menu",models.Menu, serializers.MenuSerializer)
     
 def update_menu_by_id(request_data, menu_id):
-    response = tools.update_object(request_data, menu_id, models.Menu, serializers.MenuSerializer)
-    if "error" in response:
-        return response
-    else:
-        response["menu"] = response.pop("object")
-        return response
+    tools.update_object(
+        request_data, menu_id, "menu", models.Menu, serializers.MenuSerializer
+    )
 
 def filter_menus(filter_field, filter_value):
     filtered_data = tools.serialize_filtered_model_objects(
