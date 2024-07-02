@@ -31,6 +31,7 @@ urlpatterns = [
     path("api/restaurants/<restaurant_id>/menus/<menu_id>", restaurants_views.menus),
     
     path("api/menus", restaurants_views.menus),
+    path("api/menus/filter/<filter_field>=<filter_value>", restaurants_views.menus_filter_by_field_and_value),
     path("api/menus/<menu_id>", restaurants_views.menus_by_id),
     
     path("api/auth/", include("user_auth.urls")),

@@ -129,3 +129,10 @@ def menus_by_id(request: HttpRequest, menu_id, restaurant_id = None):
                 return Response({"restaurant": particular_restaurant.data, "menu": particular_menu.data, "changed": changed})
 
             return Response({"menu": particular_menu.data, "changed": changed})
+
+@api_view(["GET"])      
+def menus_filter_by_field_and_value(request, filter_field, filter_value):
+    if request.method == "GET":
+        menus_after_filter = models.Menu.objects.filter(**{filter_field: filter_value}) 
+        menus_after_filter = serializers.MenuSerializer(menus_after_filter, many = True)
+        return Response({"menus": menus_after_filter.data})
