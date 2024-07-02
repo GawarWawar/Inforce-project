@@ -24,3 +24,11 @@ def post_vote(request_data):
         return {"menu": new_vote.data}
     else:
         return {"errors": new_vote.errors, "status": status.HTTP_400_BAD_REQUEST}
+    
+def filter_votes(filter_field, filter_value):
+    filtered_data = tools.serialize_filtered_model_objects(
+        {filter_field: filter_value},
+        models.Vote,
+        serializers.VoteSerializer
+    ).data
+    return {"votes": filtered_data}
