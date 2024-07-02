@@ -26,15 +26,18 @@ urlpatterns = [
     
     path("api/restaurants", restaurants_views.restaurants),
     path("api/restaurants/<restaurant_id>", restaurants_views.restaurants_by_id),
-    
-    path("api/restaurants/<restaurant_id>/menus", restaurants_views.all_menus),
-    path("api/restaurants/<restaurant_id>/menus/<menu_id>", restaurants_views.all_menus),
+    path(
+        "api/restaurants/filter/<filter_field>=<filter_value>", 
+        restaurants_views.restaurants_filter_by_field_and_value
+    ),
     
     path("api/menus", restaurants_views.all_menus),
-    path("api/menus/filter/<filter_field>=<filter_value>", restaurants_views.menus_filter_by_field_and_value),
     path("api/menus/<menu_id>", restaurants_views.menus_by_id),
+    path("api/menus/filter/<filter_field>=<filter_value>", restaurants_views.menus_filter_by_field_and_value),
     
     path("api/votes", restaurants_views.votes),
+    path("api/votes/<vote_id>", restaurants_views.votes_by_id),
+    path("api/votes/filter/<filter_field>=<filter_value>", restaurants_views.votes_filter_by_field_and_value),
     
     path("api/auth/", include("user_auth.urls")),
 ]

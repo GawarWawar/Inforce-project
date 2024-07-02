@@ -1,11 +1,7 @@
-from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
-from django.http import HttpRequest, HttpResponseNotAllowed
+from django.http import HttpRequest
 
-
-from . import serializers, models
 from .data_manipulations import restaurants as dm_restaurants
 from .data_manipulations import menus as dm_menus
 from .data_manipulations import votes as dm_votes
@@ -52,9 +48,14 @@ def restaurants_by_id(request: HttpRequest, restaurant_id):
                 return Response(response, status=response_status)
             else:
                 return Response(response)
+            
+@api_view(["GET"])      
+def restaurants_filter_by_field_and_value(request, filter_field, filter_value):
+    if request.method == "GET":
+        return Response(dm_restaurants.filter_restaurants(filter_field, filter_value))
 
 @api_view(["GET", "POST"])
-def all_menus (request: HttpRequest, restaurant_id = None):
+def all_menus (request: HttpRequest):
     if request.method == "GET": 
         return Response(dm_menus.get_all_menus())
     
@@ -104,10 +105,32 @@ def votes(request):
     if request.method == "GET": 
         return Response(dm_votes.get_all_votes())
     elif request.method == "POST":
-        new_vote = serializers.VoteSerializer(data = request.data)
-        if new_vote.is_valid():
-            new_vote.save()
-            
-            return Response({"vote": new_vote.data})
+        response = dm_votes.post_vote(request.data)
+        if "error" in response:
+            response_status = response.pop("status")
+            return Response(response, status=response_status)
         else:
-            return Response(new_vote.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(response)
+        
+@api_view(["GET", "PUT"])
+def votes_by_id(request, vote_id):
+    if request.method == "GET": 
+        particular_menu = dm_votes.get_vote_by_id(vote_id)
+        if 'errors' in particular_menu:
+            response_status = particular_menu.pop("status")
+            return Response(particular_menu, status=response_status)
+        else:
+            return Response(particular_menu.pop("menu"))
+        
+    if request.method == "PUT":
+        response = dm_votes.update_vote_by_id(request.data, vote_id)
+        if "error" in response:
+            response_status = response.pop("status")
+            return Response(response, status=response_status)
+        else:
+            return Response(response)
+        
+@api_view(["GET"])      
+def votes_filter_by_field_and_value(request, filter_field, filter_value):
+    if request.method == "GET":
+        return Response(dm_votes.filter_votes(filter_field, filter_value))
