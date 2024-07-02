@@ -115,12 +115,12 @@ def votes(request):
 @api_view(["GET", "PUT"])
 def votes_by_id(request, vote_id):
     if request.method == "GET": 
-        particular_menu = dm_votes.get_vote_by_id(vote_id)
-        if 'errors' in particular_menu:
-            response_status = particular_menu.pop("status")
-            return Response(particular_menu, status=response_status)
+        particular_vote = dm_votes.get_vote_by_id(vote_id)
+        if 'errors' in particular_vote:
+            response_status = particular_vote.pop("status")
+            return Response(particular_vote, status=response_status)
         else:
-            return Response(particular_menu.pop("menu"))
+            return Response(particular_vote.pop("vote"))
         
     if request.method == "PUT":
         response = dm_votes.update_vote_by_id(request.data, vote_id)
