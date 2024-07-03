@@ -1,5 +1,8 @@
 from django.http import HttpRequest
-from rest_framework.decorators import api_view
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
 
 from restaurant_api import models
@@ -7,6 +10,8 @@ from restaurant_api.data_manipulations import restaurants as dm_restaurants
 from restaurant_api.data_manipulations import menus as dm_menus
 from restaurant_api.data_manipulations import votes as dm_votes
 
+@authentication_classes([SessionAuthentication, JWTAuthentication])
+@permission_classes([IsAuthenticated, IsAdminUser])
 @api_view(["GET", "POST"])
 def restaurants(request: HttpRequest):
     if request.method == "GET": 
@@ -19,7 +24,9 @@ def restaurants(request: HttpRequest):
             return Response(response, status=response_status)
         else:
             return Response(response)
-  
+
+@authentication_classes([SessionAuthentication, JWTAuthentication])
+@permission_classes([IsAuthenticated, IsAdminUser])
 @api_view(["GET", "PUT"])      
 def restaurants_by_id(request: HttpRequest, restaurant_id):
         if request.method == "GET": 
@@ -48,12 +55,16 @@ def restaurants_by_id(request: HttpRequest, restaurant_id):
                 return Response(response, status=response_status)
             else:
                 return Response(response)
-            
+
+@authentication_classes([SessionAuthentication, JWTAuthentication])
+@permission_classes([IsAuthenticated, IsAdminUser])
 @api_view(["GET"])      
 def restaurants_filter_by_field_and_value(request, filter_field, filter_value):
     if request.method == "GET":
         return Response(dm_restaurants.filter_restaurants(filter_field, filter_value))
     
+@authentication_classes([SessionAuthentication, JWTAuthentication])
+@permission_classes([IsAuthenticated])
 @api_view(["GET", "POST"])      
 def restaurants_by_id_last_menu(request: HttpRequest, restaurant_id):
         if request.method == "GET": 

@@ -1,11 +1,16 @@
 import datetime
-from rest_framework.decorators import api_view
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
 from restaurant_api.data_manipulations import restaurants as dm_restaurants
 from restaurant_api.data_manipulations import menus as dm_menus
 from restaurant_api.data_manipulations import votes as dm_votes
 
+@authentication_classes([SessionAuthentication, JWTAuthentication])
+@permission_classes([IsAuthenticated])
 @api_view(["GET", "POST"])
 def votes(request):
     if request.method == "GET": 
@@ -17,7 +22,9 @@ def votes(request):
             return Response(response, status=response_status)
         else:
             return Response(response)
-        
+
+@authentication_classes([SessionAuthentication, JWTAuthentication])
+@permission_classes([IsAuthenticated, IsAdminUser])        
 @api_view(["GET", "PUT"])
 def votes_by_id(request, vote_id):
     if request.method == "GET": 
@@ -35,12 +42,16 @@ def votes_by_id(request, vote_id):
             return Response(response, status=response_status)
         else:
             return Response(response)
-        
+
+@authentication_classes([SessionAuthentication, JWTAuthentication])
+@permission_classes([IsAuthenticated, IsAdminUser])
 @api_view(["GET"])      
 def votes_filter_by_field_and_value(request, filter_field, filter_value):
     if request.method == "GET":
         return Response(dm_votes.filter_votes(filter_field, filter_value))
     
+@authentication_classes([SessionAuthentication, JWTAuthentication])
+@permission_classes([IsAuthenticated])
 @api_view(["GET"])      
 def votes_calculate_for_today(request):
     if request.method == "GET":

@@ -1,12 +1,17 @@
 import datetime
 from django.http import HttpRequest
-from rest_framework.decorators import api_view
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
 
 from restaurant_api.data_manipulations import restaurants as dm_restaurants
 from restaurant_api.data_manipulations import menus as dm_menus
 from restaurant_api.data_manipulations import votes as dm_votes
 
+@authentication_classes([SessionAuthentication, JWTAuthentication])
+@permission_classes([IsAuthenticated, IsAdminUser])
 @api_view(["GET", "POST"])
 def all_menus (request: HttpRequest):
     if request.method == "GET": 
@@ -19,13 +24,16 @@ def all_menus (request: HttpRequest):
             return Response(response, status=response_status)
         else:
             return Response(response)
-        
+
+@authentication_classes([SessionAuthentication, JWTAuthentication])
+@permission_classes([IsAuthenticated])    
 @api_view(["GET"])
 def menus_current_day (request: HttpRequest):
     if request.method == "GET": 
         return Response(dm_menus.filter_menus("day_created", datetime.date.today()))
         
-        
+@authentication_classes([SessionAuthentication, JWTAuthentication])
+@permission_classes([IsAuthenticated, IsAdminUser])        
 @api_view(["GET", "PUT"])      
 def menus_by_id(request: HttpRequest, menu_id):
         if request.method == "GET": 
@@ -53,6 +61,8 @@ def menus_by_id(request: HttpRequest, menu_id):
             else:
                 return Response(response)
 
+@authentication_classes([SessionAuthentication, JWTAuthentication])
+@permission_classes([IsAuthenticated, IsAdminUser])
 @api_view(["GET"])      
 def menus_filter_by_field_and_value(request, filter_field, filter_value):
     if request.method == "GET":
