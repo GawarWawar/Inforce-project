@@ -18,7 +18,7 @@ def update_object(data_to_update, object_id, object_name_string, object_model, o
     try: 
         object_to_change = get_object_or_404(object_model, pk = object_id)
     except Http404 as error:
-        return {"errors": error, "status": status.HTTP_404_NOT_FOUND}
+        return {"details": error, "status": status.HTTP_404_NOT_FOUND}
     
     changed = False
     for field in data_to_update:
@@ -36,6 +36,6 @@ def get_object_by_id (object_id, object_name_string, model, serializer):
     try:
         particular_object = get_object_or_404(model, pk = object_id)
     except Http404 as error:
-        return {"errors": str(error), "status": status.HTTP_404_NOT_FOUND}
+        return {"details": str(error), "status": status.HTTP_404_NOT_FOUND}
     particular_object = serializer(particular_object)
     return {object_name_string: particular_object.data}

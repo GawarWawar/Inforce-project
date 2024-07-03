@@ -29,7 +29,7 @@ def votes(request):
 def votes_by_id(request, vote_id):
     if request.method == "GET": 
         particular_vote = dm_votes.get_vote_by_id(vote_id)
-        if 'errors' in particular_vote:
+        if 'details' in particular_vote:
             response_status = particular_vote.pop("status")
             return Response(particular_vote, status=response_status)
         else:

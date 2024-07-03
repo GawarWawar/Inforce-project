@@ -31,7 +31,7 @@ def restaurants(request: HttpRequest):
 def restaurants_by_id(request: HttpRequest, restaurant_id):
         if request.method == "GET": 
             particular_restaurant = dm_restaurants.get_restaurant_by_id(restaurant_id)
-            if 'errors' in particular_restaurant:
+            if 'details' in particular_restaurant:
                 response_status = particular_restaurant.pop("status")
                 return Response(particular_restaurant, status=response_status)
             else:
@@ -69,7 +69,7 @@ def restaurants_filter_by_field_and_value(request, filter_field, filter_value):
 def restaurants_by_id_last_menu(request: HttpRequest, restaurant_id):
         if request.method == "GET": 
             particular_restaurant = dm_restaurants.get_restaurant_by_id(restaurant_id)
-            if 'errors' in particular_restaurant:
+            if 'details' in particular_restaurant:
                 response_status = particular_restaurant.pop("status")
                 return Response(particular_restaurant, status=response_status)
             else:
@@ -86,7 +86,7 @@ def restaurants_by_id_last_menu(request: HttpRequest, restaurant_id):
             restaurant_menu = dm_menus.get_menu_by_id(
                 last_restaurant_menu_id
             )
-            if not "errors" in restaurant_menu:
+            if not "details" in restaurant_menu:
                 restaurant_menu = restaurant_menu["menu"]
                 restaurant_menu["votes"] = dm_votes.filter_votes("menu", restaurant_menu["id"])["votes"]   
             else:

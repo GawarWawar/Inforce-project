@@ -18,7 +18,7 @@ def post_new_menu(request_data):
         
         return {"menu": new_menu.data}
     else:
-        return {"errors": new_menu.errors, "status": status.HTTP_400_BAD_REQUEST}
+        return {"details": new_menu.details, "status": status.HTTP_400_BAD_REQUEST}
 
 def get_menu_by_id(menu_id):
     return tools.get_object_by_id(menu_id, "menu", models.Menu, serializers.MenuSerializer)

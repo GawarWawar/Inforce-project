@@ -1,13 +1,12 @@
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 
 from rest_framework import status
-from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.authentication import SessionAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
 
 from .serializers import UserSerializer
 from . import tokens
@@ -70,7 +69,7 @@ def users(request):
 def users_by_id(request, user_id):
     if request.method == "GET": 
         particular_user = dm_users.get_user_by_id(user_id)
-        if 'errors' in particular_user:
+        if 'details' in particular_user:
             response_status = particular_user.pop("status")
             return Response(particular_user, status=response_status)
         else:

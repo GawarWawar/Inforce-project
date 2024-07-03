@@ -38,7 +38,7 @@ def menus_current_day (request: HttpRequest):
 def menus_by_id(request: HttpRequest, menu_id):
         if request.method == "GET": 
             particular_menu = dm_menus.get_menu_by_id(menu_id)
-            if 'errors' in particular_menu:
+            if 'details' in particular_menu:
                 response_status = particular_menu.pop("status")
                 return Response(particular_menu, status=response_status)
             else:

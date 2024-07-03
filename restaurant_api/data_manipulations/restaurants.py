@@ -18,7 +18,7 @@ def post_new_restaurant(request_data):
         
         return {"restaurant": new_resourant.data}
     else:
-        return {"errors": new_resourant.errors, "status": status.HTTP_400_BAD_REQUEST}
+        return {"details": new_resourant.details, "status": status.HTTP_400_BAD_REQUEST}
     
 def get_restaurant_by_id(restaurant_id):
     return tools.get_object_by_id(restaurant_id, "restaurant", models.Restaurant, serializers.RestaurantSerializer)

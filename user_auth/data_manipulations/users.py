@@ -19,7 +19,7 @@ def post_user(request_data):
         
         return {"user": new_user.data}
     else:
-        return {"errors": new_user.errors, "status": status.HTTP_400_BAD_REQUEST}
+        return {"details": new_user.errors, "status": status.HTTP_400_BAD_REQUEST}
     
 def get_user_by_id(user_id):
     return tools.get_object_by_id(user_id, "user", User, serializers.UserSerializer)    
