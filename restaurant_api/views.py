@@ -1,11 +1,9 @@
 import datetime
-from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import HttpRequest
-from django.core.exceptions import ObjectDoesNotExist
 
-from . import models, serializers
+from . import models
 from .data_manipulations import restaurants as dm_restaurants
 from .data_manipulations import menus as dm_menus
 from .data_manipulations import votes as dm_votes
