@@ -24,7 +24,6 @@ def post_user(request_data):
         user.save()
         
         generated_tokens = tokens.create_jwt_pair_for_user(user)
-        new_user = tokens.create_jwt_pair_for_user(user)
         data = new_user.data
         data.pop("password")
         
