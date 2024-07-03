@@ -18,7 +18,9 @@ from django.contrib import admin
 from django.urls import include, path
 
 from . import views
-from restaurant_api import views as restaurants_views
+from restaurant_api.endpoints import restaurants as restaurants_views
+from restaurant_api.endpoints import menus as menus_views
+from restaurant_api.endpoints import votes as votes_views
 
 urlpatterns = [
     path("", views.index),
@@ -37,23 +39,23 @@ urlpatterns = [
     # GET last menu for the particular restaurant or POST to create new menu for the restaurant
     path("api/restaurants/<restaurant_id>/menu", restaurants_views.restaurants_by_id_last_menu),
     # GET menus for the current day
-    path("api/today_menus", restaurants_views.menus_current_day), 
+    path("api/today_menus", menus_views.menus_current_day), 
     # GET votes for each of the day`s menu
-    path("api/votes/calculate_today", restaurants_views.votes_calculate_for_today),
+    path("api/votes/calculate_today", votes_views.votes_calculate_for_today),
     
     # GET all menus or POST to create new menu
-    path("api/menus", restaurants_views.all_menus),
+    path("api/menus", menus_views.all_menus),
     # GET menu by id or PUT to update it
-    path("api/menus/<menu_id>", restaurants_views.menus_by_id),
+    path("api/menus/<menu_id>", menus_views.menus_by_id),
     # GET all menus where filter_field=filter_value
-    path("api/menus/filter/<filter_field>=<filter_value>", restaurants_views.menus_filter_by_field_and_value),
+    path("api/menus/filter/<filter_field>=<filter_value>", menus_views.menus_filter_by_field_and_value),
     
     # GET all votes or POST to create new vote
-    path("api/votes", restaurants_views.votes),
+    path("api/votes", votes_views.votes),
     # GET vote by id or PUT to update it
-    path("api/votes/<vote_id>", restaurants_views.votes_by_id),
+    path("api/votes/<vote_id>", votes_views.votes_by_id),
     # GET all votes where filter_field=filter_value
-    path("api/votes/filter/<filter_field>=<filter_value>", restaurants_views.votes_filter_by_field_and_value),
+    path("api/votes/filter/<filter_field>=<filter_value>", votes_views.votes_filter_by_field_and_value),
     
     # User authification
     path("api/auth/", include("user_auth.urls")),
