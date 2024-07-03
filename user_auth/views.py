@@ -1,11 +1,11 @@
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.auth.models import User
 
 from rest_framework import status
-from rest_framework.authentication import SessionAuthentication, BaseAuthentication
+from rest_framework.authentication import SessionAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
 from .serializers import UserSerializer
