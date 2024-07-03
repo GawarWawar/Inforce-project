@@ -9,9 +9,9 @@ from restaurant_api.data_manipulations import restaurants as dm_restaurants
 from restaurant_api.data_manipulations import menus as dm_menus
 from restaurant_api.data_manipulations import votes as dm_votes
 
+@api_view(["GET", "POST"])
 @authentication_classes([SessionAuthentication, JWTAuthentication])
 @permission_classes([IsAuthenticated])
-@api_view(["GET", "POST"])
 def votes(request):
     if request.method == "GET": 
         return Response(dm_votes.get_all_votes())
@@ -23,9 +23,9 @@ def votes(request):
         else:
             return Response(response)
 
+@api_view(["GET", "PUT"])
 @authentication_classes([SessionAuthentication, JWTAuthentication])
 @permission_classes([IsAuthenticated, IsAdminUser])        
-@api_view(["GET", "PUT"])
 def votes_by_id(request, vote_id):
     if request.method == "GET": 
         particular_vote = dm_votes.get_vote_by_id(vote_id)
@@ -43,16 +43,16 @@ def votes_by_id(request, vote_id):
         else:
             return Response(response)
 
+@api_view(["GET"])      
 @authentication_classes([SessionAuthentication, JWTAuthentication])
 @permission_classes([IsAuthenticated, IsAdminUser])
-@api_view(["GET"])      
 def votes_filter_by_field_and_value(request, filter_field, filter_value):
     if request.method == "GET":
         return Response(dm_votes.filter_votes(filter_field, filter_value))
     
+@api_view(["GET"])      
 @authentication_classes([SessionAuthentication, JWTAuthentication])
 @permission_classes([IsAuthenticated])
-@api_view(["GET"])      
 def votes_calculate_for_today(request):
     if request.method == "GET":
         

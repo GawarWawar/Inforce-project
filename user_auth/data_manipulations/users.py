@@ -4,6 +4,9 @@ from user_auth import serializers
 from restaurant_api.data_manipulations import tools
 from django.contrib.auth.models import User
 
+from user_auth import tokens
+
+
 def get_all_users():
         all_users = tools.serialize_filtered_model_objects(
             {"all": True},
@@ -16,8 +19,16 @@ def post_user(request_data):
     new_user = serializers.UserSerializer(data = request_data)
     if new_user.is_valid():
         new_user.save()
+        user = User.objects.get(username=request_data["username"])
+        user.set_password(request_data["password"])
+        user.save()
         
-        return {"user": new_user.data}
+        generated_tokens = tokens.create_jwt_pair_for_user(user)
+        new_user = tokens.create_jwt_pair_for_user(user)
+        data = new_user.data
+        data.pop("password")
+        
+        return {"tokens": generated_tokens, "user": data}
     else:
         return {"details": new_user.errors, "status": status.HTTP_400_BAD_REQUEST}
     

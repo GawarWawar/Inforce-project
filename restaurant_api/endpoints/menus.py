@@ -10,9 +10,9 @@ from restaurant_api.data_manipulations import restaurants as dm_restaurants
 from restaurant_api.data_manipulations import menus as dm_menus
 from restaurant_api.data_manipulations import votes as dm_votes
 
+@api_view(["GET", "POST"])
 @authentication_classes([SessionAuthentication, JWTAuthentication])
 @permission_classes([IsAuthenticated, IsAdminUser])
-@api_view(["GET", "POST"])
 def all_menus (request: HttpRequest):
     if request.method == "GET": 
         return Response(dm_menus.get_all_menus())
@@ -25,16 +25,16 @@ def all_menus (request: HttpRequest):
         else:
             return Response(response)
 
+@api_view(["GET"])
 @authentication_classes([SessionAuthentication, JWTAuthentication])
 @permission_classes([IsAuthenticated])    
-@api_view(["GET"])
 def menus_current_day (request: HttpRequest):
     if request.method == "GET": 
         return Response(dm_menus.filter_menus("day_created", datetime.date.today()))
         
+@api_view(["GET", "PUT"])      
 @authentication_classes([SessionAuthentication, JWTAuthentication])
 @permission_classes([IsAuthenticated, IsAdminUser])        
-@api_view(["GET", "PUT"])      
 def menus_by_id(request: HttpRequest, menu_id):
         if request.method == "GET": 
             particular_menu = dm_menus.get_menu_by_id(menu_id)
@@ -61,9 +61,9 @@ def menus_by_id(request: HttpRequest, menu_id):
             else:
                 return Response(response)
 
+@api_view(["GET"])    
 @authentication_classes([SessionAuthentication, JWTAuthentication])
 @permission_classes([IsAuthenticated, IsAdminUser])
-@api_view(["GET"])      
 def menus_filter_by_field_and_value(request, filter_field, filter_value):
     if request.method == "GET":
         return Response(dm_menus.filter_menus(filter_field, filter_value))

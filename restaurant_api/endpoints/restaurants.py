@@ -10,9 +10,9 @@ from restaurant_api.data_manipulations import restaurants as dm_restaurants
 from restaurant_api.data_manipulations import menus as dm_menus
 from restaurant_api.data_manipulations import votes as dm_votes
 
-@authentication_classes([SessionAuthentication, JWTAuthentication])
-@permission_classes([IsAuthenticated, IsAdminUser])
 @api_view(["GET", "POST"])
+@authentication_classes([SessionAuthentication, JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def restaurants(request: HttpRequest):
     if request.method == "GET": 
         return Response(dm_restaurants.get_all_restaurants())
@@ -25,9 +25,9 @@ def restaurants(request: HttpRequest):
         else:
             return Response(response)
 
+@api_view(["GET", "PUT"])      
 @authentication_classes([SessionAuthentication, JWTAuthentication])
 @permission_classes([IsAuthenticated, IsAdminUser])
-@api_view(["GET", "PUT"])      
 def restaurants_by_id(request: HttpRequest, restaurant_id):
         if request.method == "GET": 
             particular_restaurant = dm_restaurants.get_restaurant_by_id(restaurant_id)
@@ -56,16 +56,16 @@ def restaurants_by_id(request: HttpRequest, restaurant_id):
             else:
                 return Response(response)
 
+@api_view(["GET"])      
 @authentication_classes([SessionAuthentication, JWTAuthentication])
 @permission_classes([IsAuthenticated, IsAdminUser])
-@api_view(["GET"])      
 def restaurants_filter_by_field_and_value(request, filter_field, filter_value):
     if request.method == "GET":
         return Response(dm_restaurants.filter_restaurants(filter_field, filter_value))
     
+@api_view(["GET", "POST"])      
 @authentication_classes([SessionAuthentication, JWTAuthentication])
 @permission_classes([IsAuthenticated])
-@api_view(["GET", "POST"])      
 def restaurants_by_id_last_menu(request: HttpRequest, restaurant_id):
         if request.method == "GET": 
             particular_restaurant = dm_restaurants.get_restaurant_by_id(restaurant_id)
