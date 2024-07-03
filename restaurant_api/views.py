@@ -1,18 +1,19 @@
 import datetime
+from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import HttpRequest
+from django.core.exceptions import ObjectDoesNotExist
 
 from . import models, serializers
 from .data_manipulations import restaurants as dm_restaurants
 from .data_manipulations import menus as dm_menus
 from .data_manipulations import votes as dm_votes
-    
 
 @api_view(["GET", "POST"])
 def restaurants(request: HttpRequest):
     if request.method == "GET": 
-        return Response(dm_restaurants.get_all_restaurants(request))
+        return Response(dm_restaurants.get_all_restaurants())
     
     elif request.method == "POST":
         response = dm_restaurants.post_new_restaurant(request.data)
@@ -66,14 +67,23 @@ def restaurants_by_id_last_menu(request: HttpRequest, restaurant_id):
             else:
                 particular_restaurant = particular_restaurant["restaurant"]
             
-            restaurant_menu = serializers.MenuSerializer(
-                models.Menu.objects.filter(
-                    restaurant = models.Restaurant.objects.get(pk = restaurant_id)
-                ).last()
-            ).data
+            last_restaurant_menu_id = models.Menu.objects.filter(
+                restaurant = models.Restaurant.objects.get(pk = restaurant_id)
+            ).last()
             
-            
-            restaurant_menu["votes"] = dm_votes.filter_votes("menu", restaurant_menu["id"])["votes"]   
+            if last_restaurant_menu_id is None:
+                last_restaurant_menu_id = -1
+            else:
+                last_restaurant_menu_id = last_restaurant_menu_id.pk
+            restaurant_menu = dm_menus.get_menu_by_id(
+                last_restaurant_menu_id
+            )
+            if not "errors" in restaurant_menu:
+                restaurant_menu = restaurant_menu["menu"]
+                restaurant_menu["votes"] = dm_votes.filter_votes("menu", restaurant_menu["id"])["votes"]   
+            else:
+                response_status = restaurant_menu.pop("status")
+                return Response(restaurant_menu, status=response_status)
             return Response(
                 {
                     "restaurant": particular_restaurant, 
@@ -181,3 +191,23 @@ def votes_by_id(request, vote_id):
 def votes_filter_by_field_and_value(request, filter_field, filter_value):
     if request.method == "GET":
         return Response(dm_votes.filter_votes(filter_field, filter_value))
+    
+@api_view(["GET"])      
+def votes_calculate_for_today(request):
+    if request.method == "GET":
+        
+        results = dm_menus.filter_menus("day_created", datetime.date.today())["menus"]
+        
+        for menu in results:
+            menu["votes_count"] = len(dm_votes.filter_votes("menu", menu["id"])["votes"])
+        
+        response = {"restaurants": []}
+        for menu in results:
+            response["restaurants"].append(
+                {
+                    "restaurant": menu["restaurant"],
+                    "menu": menu["id"],
+                    "votes_count": menu["votes_count"]
+                }
+            )
+        return Response(response)

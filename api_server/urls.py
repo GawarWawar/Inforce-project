@@ -38,6 +38,8 @@ urlpatterns = [
     path("api/restaurants/<restaurant_id>/menu", restaurants_views.restaurants_by_id_last_menu),
     # GET menus for the current day
     path("api/today_menus", restaurants_views.menus_current_day), 
+    # GET votes for each of the day`s menu
+    path("api/votes/calculate_today", restaurants_views.votes_calculate_for_today),
     
     # GET all menus or POST to create new menu
     path("api/menus", restaurants_views.all_menus),
