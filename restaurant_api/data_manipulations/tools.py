@@ -36,6 +36,6 @@ def get_object_by_id (object_id, object_name_string, model, serializer):
     try:
         particular_object = get_object_or_404(model, pk = object_id)
     except Http404 as error:
-        return {"errors": error, "status": status.HTTP_404_NOT_FOUND}
+        return {"errors": str(error), "status": status.HTTP_404_NOT_FOUND}
     particular_object = serializer(particular_object)
     return {object_name_string: particular_object.data}
