@@ -1,3 +1,6 @@
+# library of all endpoints. can be launched to test in manual mode
+
+# NOTE: for each request other then Signup and Login, valid Authorization: Token should be provided
 # MAIN ENDPOINTS
 # Auth Part
 # Signup

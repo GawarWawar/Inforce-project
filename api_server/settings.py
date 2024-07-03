@@ -37,14 +37,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # DRF plugins
     'rest_framework',
     'rest_framework.authtoken',
     
+    # This project apps
     "restaurant_api.apps.RestaurantApiConfig",
     "user_auth.apps.UserAuthConfig",
 ]
 
 
+# DRF configuration
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
@@ -55,6 +59,7 @@ REST_FRAMEWORK = {
     ],
 }
 
+# JWT configuration
 SIMPLE_JWT = {
     "SIGNING_KEY": SECRET_KEY,
     "AUTH_HEADER_TYPES": ("Token",),
