@@ -73,7 +73,7 @@ def users_by_id(request, user_id):
             return Response(particular_user.pop("user"))
         
     if request.method == "PUT":
-        response = dm_users.update_vote_by_id(request.data, user_id)
+        response = dm_users.update_user_by_id(request.data, user_id)
         if "error" in response:
             response_status = response.pop("status")
             return Response(response, status=response_status)
