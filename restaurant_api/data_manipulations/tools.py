@@ -31,9 +31,12 @@ def update_object(
     
     changed = False
     for field in data_to_update:
-        if object_to_change.__dict__[field] != data_to_update[field]:
-            object_to_change.__dict__[field] = data_to_update[field]
-            changed = True
+        try:
+            if object_to_change.__dict__[field] != data_to_update[field]:
+                object_to_change.__dict__[field] = data_to_update[field]
+                changed = True
+        except KeyError as error:
+            return {"details": "Bad key "+str(error), "status": status.HTTP_400_BAD_REQUEST}
             
     try:
         object_to_change.save()
