@@ -2,17 +2,17 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
-from .models import Restaurant, Menu, Vote
+from . import models 
 
 class RestaurantSerializer(serializers.ModelSerializer):
     class Meta(object):
-        model = Restaurant
+        model = models.Restaurant
         fields = "__all__"
 
         
 class MenuSerializer(serializers.ModelSerializer):
     class Meta(object):
-        model = Menu
+        model = models.Menu
         fields = "__all__"
         
 class VoteSerializer(serializers.ModelSerializer):
@@ -20,6 +20,6 @@ class VoteSerializer(serializers.ModelSerializer):
     menu = serializers.PrimaryKeyRelatedField
     
     class Meta(object):
-        model = Vote
+        model = models.Vote
         fields = "__all__"
         
