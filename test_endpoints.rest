@@ -33,6 +33,7 @@ Authorization: Token x.x.x
 
 {}
 
+###
 # POST to create user
 POST http://127.0.0.1:8000/api/auth/users
 Content-Type: application/json 
@@ -175,7 +176,7 @@ PUT  http://127.0.0.1:8000/api/menu/1
 Content-Type: application/json 
 Authorization: Token x.x.x
 
-{ "restaurant": "1", "description": "Very good rest, glorious menu!"}
+{ "restaurant_id": "1", "description": "Very good rest, glorious menu!"}
 
 ###
 # GET all menus where filter_field=filter_value
@@ -190,6 +191,7 @@ Authorization: Token x.x.x
 # GET all existing votes
 GET  http://127.0.0.1:8000/api/votes
 Content-Type: application/json
+Authorization: Token x.x.x
 
 {}
 
@@ -207,7 +209,7 @@ PUT  http://127.0.0.1:8000/api/vote/1
 Content-Type: application/json 
 Authorization: Token x.x.x
 
-{ "user": "2", "menu": "1"}
+{ "user_id": "2", "menu_id": "1"}
 
 ###
 # GET all votes where filter_field=filter_value
