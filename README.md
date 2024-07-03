@@ -36,25 +36,25 @@ As a side NOTE, functions were used as a starter, however time was closing too q
 - impliment expiration time/date for teh tokens.
 
 MAIN ENDPOINTS
-- User authification  
--- path("api/auth/", include("user_auth.urls")):
---- Register user providing username, password and email
----- path("signup", view=views.signup),
---- Login to system using username and password
----- path("login", view=views.login),
---- Check if token working, returns user
----- path("check_token", view=views.check_token),
---- GET all users or POST to create user
----- path("users", view=views.users),
---- GET all info about certain user or PUT to edit certain user
----- path("users/<user_id>", view=views.users_by_id),
-- GET all restaurants or POST to create new restaurant  
--- path("api/restaurants", restaurants_views.restaurants),
-restaurant  
--- path("api/restaurants/<restaurant_id>/menu", restaurants_views.restaurants_by_id_last_menu),
-- GET menus for the current day
--- path("api/today_menus", menus_views.menus_current_day), 
-- GET all votes or POST to create new vote
--- path("api/votes", votes_views.votes),
-- GET votes for each of the day`s menu
--- path("api/votes/calculate_today", votes_views.votes_calculate_for_today),
+- User authification:  
+-- path("api/auth/", include("user_auth.urls")):  
+--- Register user providing username, password and email:  
+---- path("signup", view=views.signup);  
+--- Login to system using username and password:  
+---- path("login", view=views.login);  
+--- Check if token working, returns user:  
+---- path("check_token", view=views.check_token);  
+--- GET all users or POST to create user:  
+---- path("users", view=views.users);  
+--- GET all info about certain user or PUT to edit certain user:  
+---- path("users/<user_id>", view=views.users_by_id);  
+- GET all restaurants or POST to create new restaurant:   
+-- path("api/restaurants", restaurants_views.restaurants);  
+- GET last menu for the particular restaurant or POST to create new menu for the restaurant:  
+-- path("api/restaurants/<restaurant_id>/menu", restaurants_views.restaurants_by_id_last_menu);  
+- GET menus for the current day:  
+-- path("api/today_menus", menus_views.menus_current_day);  
+- GET all votes or POST to create new vote:  
+-- path("api/votes", votes_views.votes);  
+- GET votes for each of the day`s menu:  
+-- path("api/votes/calculate_today", votes_views.votes_calculate_for_today).
