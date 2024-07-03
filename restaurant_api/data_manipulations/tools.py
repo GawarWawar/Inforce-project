@@ -9,12 +9,20 @@ def serialize_filtered_model_objects(
     model: models.models.Model,
     serializer: serializers.serializers.Serializer
 ) -> serializers.serializers.Serializer:
+    """
+        Filter models objects by the filter, serialize them by Serializer
+    """
     if "all" in filter:
         return serializer(model.objects.all(), many = True)
     else:
         return serializer(model.objects.filter(**filter), many = True)
 
-def update_object(data_to_update, object_id, object_name_string, object_model, object_serializer):
+def update_object(
+        data_to_update, object_id, object_name_string, object_model, object_serializer
+) -> dict[str, str]|dict[str, dict]:
+    """
+        Check if object exists and then update it
+    """
     try: 
         object_to_change = get_object_or_404(object_model, pk = object_id)
     except Http404 as error:
@@ -32,7 +40,10 @@ def update_object(data_to_update, object_id, object_name_string, object_model, o
     )
     return {object_name_string: object_to_change.data, "changed": changed}
 
-def get_object_by_id (object_id, object_name_string, model, serializer):           
+def get_object_by_id (object_id, object_name_string, model, serializer) -> dict[str, str]|dict[str, dict]:  
+    """
+        Check if object exists and return all information about it
+    """         
     try:
         particular_object = get_object_or_404(model, pk = object_id)
     except Http404 as error:
