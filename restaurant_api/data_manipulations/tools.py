@@ -1,4 +1,5 @@
 from restaurant_api import serializers, models
+from django.db.utils import IntegrityError
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from rest_framework import status
@@ -34,7 +35,11 @@ def update_object(
             object_to_change.__dict__[field] = data_to_update[field]
             changed = True
             
-    object_to_change.save()
+    try:
+        object_to_change.save()
+    except IntegrityError as error:
+        return {"details": str(error), "status": status.HTTP_300_MULTIPLE_CHOICES}
+        
     object_to_change = object_serializer(
         object_model.objects.get(pk = object_id)
     )
