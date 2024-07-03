@@ -1,0 +1,215 @@
+# MAIN ENDPOINTS
+# Auth Part
+# Signup
+
+POST http://127.0.0.1:8000/api/auth/signup
+Content-Type: application/json
+
+{ "username": "name_of_user", "password": "password_for_user", "email": "example@email.com" }
+
+###
+# Login
+POST http://127.0.0.1:8000/api/auth/login
+Content-Type: application/json
+
+{"username": "name_of_user", "password": "password_for_user" }
+
+###
+# Check auth process
+GET http://127.0.0.1:8000/api/auth/check_token
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{}
+
+###
+# GET all users
+GET http://127.0.0.1:8000/api/auth/users
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{}
+
+# POST to create user
+POST http://127.0.0.1:8000/api/auth/users
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{"username": "name_of_user1", "password": "password_for_user", "email": "example@email.com" }
+
+###
+# GET info about certain user
+GET http://127.0.0.1:8000/api/auth/users/1
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{}
+
+###
+# PUT to edit certain user
+PUT http://127.0.0.1:8000/api/auth/users/2
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{"username": "name_of_user1", "password": "password_for_user1", "email": "exampl1e@email.com" }
+
+
+###
+# RESTAURANTS PART
+# POST make new restaurant
+POST http://127.0.0.1:8000/api/restaurants
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{"name": "restaurant_name", "description": "Description of restaurant up to 1000 symbols"}
+
+###
+# GET all restaurants
+GET  http://127.0.0.1:8000/api/restaurants
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{}
+
+###
+# MENUS PART
+# POST to create new menu for the restaurant
+POST http://127.0.0.1:8000/api/restaurants/1/menu
+Content-Type: application/json
+Authorization: Token x.x.x
+
+{"description": "COOL"}
+
+###
+# Make new menu for the restaurant by its id
+GET   http://127.0.0.1:8000/api/restaurants/1/menu
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{}
+
+###
+# GET menus for the current day from each restaurant
+GET http://127.0.0.1:8000/api/today_menus
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{}
+
+###
+# VOTES PART
+# POST to create new vote
+POST http://127.0.0.1:8000/api/votes
+Content-Type: application/json
+Authorization: Token x.x.x
+
+{"user": 1, "menu": 1}
+
+###
+# GET votes for each of the day`s menu
+GET http://127.0.0.1:8000/api/votes/calculate_today
+Content-Type: application/json
+Authorization: Token x.x.x
+
+{}
+
+###
+# ADDITIONAL ENDPOINTS
+
+# RESTAURANTS PART
+# GET restaurant by id 
+GET  http://127.0.0.1:8000/api/restaurants/1/menu
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{}
+
+###
+# PUT to update restaurant by id 
+PUT  http://127.0.0.1:8000/api/restaurants/1
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{ "name": "rest1", "description": "Very good rest!"}
+
+###
+# GET all restaurant where filter_field=filter_value
+GET  http://127.0.0.1:8000/api/restaurants/filter/id=1 
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{}
+
+###
+
+# MENUS PART
+# GET all existing menus
+GET  http://127.0.0.1:8000/api/menus
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{}
+
+###
+# POST to create new menu
+POST  http://127.0.0.1:8000/api/menus
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{ "restaurant": "1", "description": "Very good menu!"}
+
+###
+# GET menu by id 
+GET  http://127.0.0.1:8000/api/menus/1
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{}
+
+###
+# PUT to update menu by id 
+PUT  http://127.0.0.1:8000/api/menu/1
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{ "restaurant": "1", "description": "Very good rest, glorious menu!"}
+
+###
+# GET all menus where filter_field=filter_value
+GET  http://127.0.0.1:8000/api/menus/filter/id=1 
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{}
+
+###
+# VOTES PART
+# GET all existing votes
+GET  http://127.0.0.1:8000/api/votes
+Content-Type: application/json
+
+{}
+
+###
+# GET vote by id 
+GET  http://127.0.0.1:8000/api/vote/1
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{}
+
+###
+# PUT to update vote by id 
+PUT  http://127.0.0.1:8000/api/vote/1
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{ "user": "2", "menu": "1"}
+
+###
+# GET all votes where filter_field=filter_value
+GET  http://127.0.0.1:8000/api/votes/filter/id=1 
+Content-Type: application/json 
+Authorization: Token x.x.x
+
+{}
